@@ -1,4 +1,4 @@
-package hello.change;
+package hello.change.currency;
 
 /**
  * Created by nate on 1/8/17.

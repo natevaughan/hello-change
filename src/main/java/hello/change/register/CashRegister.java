@@ -1,6 +1,6 @@
 package hello.change.register;
 
-import hello.change.currency.Currency;
+import hello.change.currency.CurrencyDenomination;
 
 import java.util.Collection;
 
@@ -8,5 +8,5 @@ import java.util.Collection;
  * Created by nate on 1/8/17.
  */
 public interface CashRegister {
-    public Collection<Currency> getCurrencies();
+    public Collection<CurrencyDenomination> getCurrencies();
 }

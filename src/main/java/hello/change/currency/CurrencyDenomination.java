@@ -1,20 +1,20 @@
 package hello.change.currency;
 
-import hello.change.InsufficientCurrencyException;
+import java.util.Comparator;
 
 /**
  * Created by nate on 1/8/17.
  */
-public class Bill implements Currency {
+public class CurrencyDenomination {
 
     private final Double denomination;
     private Integer count;
 
-    public Bill(double denomination) {
+    public CurrencyDenomination(double denomination) {
         this(denomination, 0);
     }
 
-    public Bill(double denomination, Integer count) {
+    public CurrencyDenomination(double denomination, Integer count) {
         this.denomination = denomination;
         this.count = count;
     }
@@ -26,7 +26,7 @@ public class Bill implements Currency {
         count -= i;
     }
 
-    public void put(Integer count) {
+    public void add(Integer count) {
         this.count += count;
     }
 
@@ -43,22 +43,29 @@ public class Bill implements Currency {
     }
 
     /**
-     * Bill equality depends only on denomination to facilitate
-     * only one object to contain the count of all bills of that
-     * denomination
+     * CurrencyDenomination equality depends only on denomination value
+     * to facilitate sorted sets
      */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Bill bill = (Bill) o;
+        CurrencyDenomination that = (CurrencyDenomination) o;
 
-        return denomination.equals(bill.denomination);
+        return denomination.equals(that.denomination);
     }
 
     @Override
     public int hashCode() {
         return denomination.hashCode();
     }
+
+    public static class DescendingComaparator<T extends CurrencyDenomination> implements Comparator<T> {
+        @Override
+        public int compare(T o1, T o2) {
+            return -1 * o1.getDenomination().compareTo(o2.getDenomination());
+        }
+    }
+
 }
