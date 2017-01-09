@@ -5,11 +5,7 @@ import hello.change.currency.InsufficientCurrencyException;
 import hello.change.strategy.GreedyChangeStrategy;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.NavigableSet;
-import java.util.Set;
-import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -23,16 +19,23 @@ import static org.junit.Assert.assertTrue;
  */
 public class GreedyChangeStrategyTest {
 
+    /**
+     * Scenario 1 is not solvable with a naive greedy solution
+     */
     private final static Double[]  TEST_VALUES_1      = new Double[]  { 5.0, 2.0 };
     private final static Integer[] TEST_COUNTS_1      = new Integer[] { 1,   4   };
     private final static Integer[] SOLUTION_COUNTS_1  = new Integer[] { 0,   4   };
     private final static Double    AMOUNT_TO_CHANGE_1 = 8.0;
 
+    /**
+     * Scenario 2 is also not solvable with a naive greedy solution
+     * and is a bit more complex as it leads to several more dead ends
+     * before a solution emerges
+     */
     private final static Double[]  TEST_VALUES_2      = new Double[]  { 20.0, 10.0, 5.0, 2.0, 1.0 };
     private final static Integer[] TEST_COUNTS_2      = new Integer[] { 1,    2,    3,   3,   0   };
     private final static Integer[] SOLUTION_COUNTS_2  = new Integer[] { 0,    1,    1,   3,   0   };
     private final static Double    AMOUNT_TO_CHANGE_2 = 21.0;
-
 
     private GreedyChangeStrategy changeStrategy = new GreedyChangeStrategy();
 
@@ -45,6 +48,7 @@ public class GreedyChangeStrategyTest {
     public void makeChangeScenarioTest2() throws InsufficientCurrencyException {
         runScenario(TEST_VALUES_2, TEST_COUNTS_2, SOLUTION_COUNTS_2, AMOUNT_TO_CHANGE_2);
     }
+
 
     public void runScenario(Double[] testValues, Integer[] testCounts, Integer[] solutionCounts, Double amountToChange) throws InsufficientCurrencyException {
         NavigableSet<CurrencyDenomination> expectedSet = createCurrencySet(testValues, solutionCounts);
@@ -61,8 +65,13 @@ public class GreedyChangeStrategyTest {
 
 
     @Test(expected = InsufficientCurrencyException.class)
-    public void cannotMakeChangeTest() throws InsufficientCurrencyException {
+    public void registerBalanceTooLowTest() throws InsufficientCurrencyException {
         changeStrategy.getChange(createCurrencySet(TEST_VALUES_1, TEST_COUNTS_1), 42.0);
+    }
+
+    @Test(expected = InsufficientCurrencyException.class)
+    public void unsolvableTest() throws InsufficientCurrencyException {
+        changeStrategy.getChange(createCurrencySet(TEST_VALUES_2, TEST_COUNTS_2), 13.0);
     }
 
     /**
